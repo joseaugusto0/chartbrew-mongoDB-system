@@ -1,7 +1,7 @@
 # Chartbrew - MongoDB - Sistema completo
-<p float="left">
-<img src="./images/cb_logo_dark.png" alt="Chartbrew-Logo" width="200"/>
-<img src="./images/mongodb.png" alt="MongoDb-Logo" width="200"/>
+<p float="left" align="center">
+<img src="./images/cb_logo_dark.png" alt="Chartbrew-Logo" width="220"/>
+<img src="./images/mongodb.png" alt="MongoDb-Logo" width="220"/>
 </p>
 
 Projeto para Deploy completo de aplicação chartbrew e seu funcionamento completo. O Chartbrew é uma aplicação para criação de dashboards a partir de banco de dados, muito similar ao conceito do PowerBI. O projeto é baseado na seguinte imagem [razvanilin/chartbrew](https://hub.docker.com/r/razvanilin/chartbrew) que contém o backend e o frontend do Chartbrew, porém não contempla o Redis (banco de dados intermediário que armazena os templates do chartbrew), o MySQL (armazena os dados vinculados aos usuários) e o MongoDB (banco que seria a base de informações para os dashbaords). Aqui possui o docker compose e os manifestos kubernetes para o deploy da aplicação por completo.
