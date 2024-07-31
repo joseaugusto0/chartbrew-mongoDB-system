@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chartbrew
+  namespace: chartbrew
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chartbrew
+  template:
+    metadata:
+      labels:
+        app: chartbrew
+    spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox
+          command:
+          - sh
+          - -c
+          - |
+            until nc -z -v -w30 mysql 3306
+            do
+              echo "Waiting for MySQL..."
+              sleep 5
+            done
+      containers:
+        - env:
+            - name: CB_API_HOST
+              value: 0.0.0.0
+            - name: CB_API_PORT
+              value: "4019"
+            - name: CB_DB_HOST
+              value: mysql
+            - name: CB_DB_NAME
+              value: chartbrew
+            - name: CB_DB_PASSWORD
+              value: admin
+            - name: CB_DB_PORT
+              value: "3306"
+            - name: CB_DB_USERNAME
+              value: root
+            - name: CB_ENCRYPTION_KEY
+              value: cee13446c35f13f279c4bba8d2e8566ecbbc987659362fa2e0bb785d840fae32
+            - name: CB_REDIS_HOST
+              value: redis
+            - name: CB_REDIS_PASSWORD
+              value: password
+            - name: CB_REDIS_PORT
+              value: "6379"
+            - name: VITE_APP_API_HOST
+              value: "http://localhost:4019"
+            - name: VITE_APP_CLIENT_HOST
+              value: "http://localhost:4018"
+            - name: VITE_APP_CLIENT_PORT
+              value: "4018"
+          image: razvanilin/chartbrew:latest
+          name: chartbrew
+          ports:
+            - name: api
+              containerPort: 4019
+            - name: http
+              containerPort: 4018
+      restartPolicy: Always

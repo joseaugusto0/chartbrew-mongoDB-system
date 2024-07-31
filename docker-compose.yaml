@@ -1,0 +1,76 @@
+version: '3'
+services:
+    chartbrew:
+      image: razvanilin/chartbrew
+      container_name: chartbrew
+      restart: always
+      ports:
+          - 4019:4019
+          - 4018:4018
+      environment:
+          - CB_ENCRYPTION_KEY=cee13446c35f13f279c4bba8d2e8566ecbbc987659362fa2e0bb785d840fae32
+          - CB_API_HOST=0.0.0.0
+          - CB_API_PORT=4019
+          - CB_DB_HOST=host.docker.internal
+          - CB_DB_PORT=3306
+          - CB_DB_NAME=chartbrew
+          - CB_DB_USERNAME=root
+          - CB_DB_PASSWORD=admin
+          - CB_REDIS_HOST=host.docker.internal
+          - CB_REDIS_PORT=6379
+          - CB_REDIS_PASSWORD=password
+          - VITE_APP_CLIENT_HOST=http://localhost:4018
+          - VITE_APP_CLIENT_PORT=4018
+          - VITE_APP_API_HOST=http://localhost:4019
+      depends_on:
+        mysql:
+          condition: service_healthy
+        redis:
+          condition: service_started
+        mongo:
+          condition: service_started
+      networks:
+        - chartbrew-network
+        
+    mysql:
+      image: mysql:latest
+      container_name: mysql
+      restart: always
+      environment:
+        - MYSQL_ROOT_PASSWORD=admin
+        - MYSQL_DATABASE=chartbrew
+      ports:
+        - 3306:3306
+      volumes:
+        - mysql_data:/var/lib/mysql
+      healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+        interval: 5s
+        timeout: 5s
+        retries: 10
+      networks:
+        - chartbrew-network
+
+    redis:
+      image: redis/redis-stack-server:latest
+      restart: always
+      ports:
+          - 6379:6379
+      networks:
+        - chartbrew-network
+
+    mongo:
+      image: mongo
+      restart: always
+      ports:
+          - 27018:27017
+      networks:
+        - chartbrew-network
+    
+networks:
+  chartbrew-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  mongo_data:

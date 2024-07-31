@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chartbrew
+  namespace: chartbrew
+spec:
+  type: LoadBalancer
+  ports:
+    - name: "4019"
+      port: 4019
+      targetPort: 4019
+    - name: "4018"
+      port: 4018
+      targetPort: 4018
+  selector:
+    app: chartbrew
+status:
+  loadBalancer: {}
