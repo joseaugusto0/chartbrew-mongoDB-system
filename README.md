@@ -3,16 +3,23 @@
 <img src="./images/cb_logo_dark.png" alt="Chartbrew-Logo" width="200"/>
 <img src="./images/mongodb.png" alt="MongoDb-Logo" width="200"/>
 </p>
-Projeto para Deploy completo de aplicação chartbrew e seu funcionamento completo. O Chartbrew é uma aplicação para criação de dashboards a partir de banco de dados, muito similar ao conceito do PowerBI. O projeto é baseado na imagem [razvanilin/chartbrew](https://hub.docker.com/r/razvanilin/chartbrew) que contém o backend e o frontend do Chartbrew, porém não contempla o Redis (banco de dados intermediário que armazena os templates do chartbrew), o MySQL (armazena os dados vinculados aos usuários) e o MongoDB (banco que seria a base de informações para os dashbaords). Aqui possui o docker compose e os manifestos kubernetes para o deploy da aplicação por completo.
+
+Projeto para Deploy completo de aplicação chartbrew e seu funcionamento completo. O Chartbrew é uma aplicação para criação de dashboards a partir de banco de dados, muito similar ao conceito do PowerBI. O projeto é baseado na seguinte imagem [razvanilin/chartbrew](https://hub.docker.com/r/razvanilin/chartbrew) que contém o backend e o frontend do Chartbrew, porém não contempla o Redis (banco de dados intermediário que armazena os templates do chartbrew), o MySQL (armazena os dados vinculados aos usuários) e o MongoDB (banco que seria a base de informações para os dashbaords). Aqui possui o docker compose e os manifestos kubernetes para o deploy da aplicação por completo.
+<br>
+<br>
 
 # Conteúdos
 
-- [Clonando projeto localmente](#clonando-projeto-localmente)
-- [Deploy com o docker-compose](#deploy-com-o-docker-compose)
-- [Deploy com o kubernetes](#deploy-com-o-kubernetes)
-- [Tecnologias](#tecnologias)
+- [1. Clonando projeto localmente](#1clonando-projeto-localmente)
+- [2. Variáveis de ambiente a serem definidas no docker compose e/ou manifestos kubernetes](#2-variáveis-de-ambiente-a-serem-definidas-no-docker-compose-eou-manifestos-kubernetes)
+    - [2.1 Chartbrew](#21-chartbrew)
+    - [2.2 MySQL](#22-mysql)
+- [3. Deploy com o docker-compose](#3-deploy-com-o-docker-compose)
+- [4. Deploy com o kubernetes](#4-deploy-com-o-kubernetes)
+- [5. Gerando uma Dash a partir do MongoDb](#5-gerando-uma-dash-a-partir-do-mongodb)
+- [6. Tecnologias](#6-tecnologias)
 
-## Clonando projeto localmente
+## 1.Clonando projeto localmente
 
 Link do [Projeto](https://github.com/joseaugusto0/chartbrew-mongoDB-system.git).
 
@@ -25,9 +32,9 @@ Link do [Projeto](https://github.com/joseaugusto0/chartbrew-mongoDB-system.git).
 - Ou clone direto pelo Visual Studio Code
   - Segue o [tutorial](https://learn.microsoft.com/en-us/azure/developer/javascript/how-to/with-visual-studio-code/clone-github-repository?tabs=create-repo-command-palette%2Cinitialize-repo-activity-bar%2Ccreate-branch-command-palette%2Ccommit-changes-command-palette%2Cpush-command-palette) de como clonar direto pelo VS Code.
 
-## Variáveis de ambiente a serem definidas no docker compose e/ou manifestos kubernetes
+## 2. Variáveis de ambiente a serem definidas no docker compose e/ou manifestos kubernetes
 
-### Chartbrew
+### 2.1 Chartbrew
 - **CB_ENCRYPTION_KEY**: Chave AES de 32 bytes. Para gerá-la com o Node, rodar o comando:
 ```
     node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
@@ -41,12 +48,12 @@ Link do [Projeto](https://github.com/joseaugusto0/chartbrew-mongoDB-system.git).
 - **CB_REDIS_PORT** = 6379
     - Porta 6379 utilizada para o banco de dados do Redis. Só mudará se alterado no manifesto ou docker compose
 
-### MySQL
+### 2.2 MySQL
 - **MYSQL_ROOT_PASSWORD** = admin
     - Como citado anteriormente, a senha padrão do MySQL é "admin", mas altere para a senha desejada nesta variável e a **CB_DB_PASSWORD** nas variáveis do Chartbrew
 
 
-## Deploy com o docker-compose
+## 3. Deploy com o docker-compose
 
 - Na pasta raíz do projeto, rodar o seguinte comando:
 ```
@@ -58,14 +65,14 @@ Link do [Projeto](https://github.com/joseaugusto0/chartbrew-mongoDB-system.git).
     docker compose down
 ```
 
-## Deploy com o kubernetes
+## 4. Deploy com o kubernetes
 - Precisamos criar o namespace separado para o chartbrew e suas configurações, portanto, vamos rodar o código (da pasta raíz) para gerar esse namespace e aplicar os manifestos na pasta **k8s**:
 ```
     kubectl create namespace chartbrew
     kubectl apply -f ./k8s/.git
 ```
 
-## Gerando uma Dash a partir do MongoDb
+## 5. Gerando uma Dash a partir do MongoDb
 
 - O MongoDb estará rodando localmente em **http://localhost:27018**, então precisará inserir dados nele anteriormente. Insira o que ver como necessário para sua aplicação.
 
@@ -92,7 +99,7 @@ Link do [Projeto](https://github.com/joseaugusto0/chartbrew-mongoDB-system.git).
 
 - Para mais informações sobre como usar o Chartbrew, consulte a [documentação](https://chartbrew.com/docs/).
 
-# Tecnologias
+# 6. Tecnologias
 
 As seguintes ferramentas foram usadas na construção do projeto:
 
